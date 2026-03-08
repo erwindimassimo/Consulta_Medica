@@ -1,0 +1,102 @@
+﻿@model Consulta_Medica.Models.PacienteDetalleViewModel
+
+@{
+    ViewData["Title"] = "Ficha del paciente";
+}
+
+<div class="container mt-4">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0">Ficha Técnica del Paciente: @Model.Nombres @Model.PrimerApellido @Model.SegundoApellido</h3>
+            @if (Model.Activo)
+            {
+                <span class="badge rounded-pill bg-light text-success px-3 py-2">
+                    <i class="bi bi-check-circle-fill"></i> PACIENTE ACTIVO
+                </span>
+            }
+            else
+            {
+                <span class="badge rounded-pill bg-danger px-3 py-2 text-white">
+                    <i class="bi bi-x-circle-fill"></i> PACIENTE INACTIVO
+                </span>
+            }
+        </div>
+
+        <div class="card-body">
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <label class="text-muted d-block">Nombres</label>
+                    <span class="h5">@Model.Nombres</span>
+                </div>
+                <div class="col-md-4">
+                    <label class="text-muted d-block">Primer Apellido</label>
+                    <span class="h5">@Model.PrimerApellido</span>
+                </div>
+                <div class="col-md-4">
+                    <label class="text-muted d-block">Segundo Apellido</label>
+                    <span class="h5">@(Model.SegundoApellido ?? "---")</span>
+                </div>
+            </div>
+
+            <hr />
+
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <strong>@Model.TipoIdentificacion:</strong> 
+                    <span class="fw-bold">@Model.Identificacion</span>
+                </div>
+                <div class="col-md-6">
+                    <strong>Fecha de Nacimiento:</strong> @Model.FechaNacimiento.ToShortDateString()
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <label class="text-muted d-block">Dirección</label>
+                <span class="h5">@Model.Direccion</span>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-12">
+                    <h6 class="text-muted border-bottom pb-2">Métodos de Contacto</h6>
+                    <div class="d-flex flex-wrap gap-2 mt-2">
+                        @if (Model.Contactos != null && Model.Contactos.Any())
+                        {
+                            @foreach (var con in Model.Contactos)
+                            {
+                                <div class="badge bg-info text-dark p-2 border shadow-sm">
+                                    <i class="bi bi-telephone-fill me-1"></i>
+                                    <strong>@con.TipoNombre:</strong> @con.Valor
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <span class="text-danger italic small">No se han registrado teléfonos o correos.</span>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-light p-3 rounded border-start border-4 border-primary">
+                <div class="row">
+                    <div class="col-md-6">
+                        <strong>Aseguradora (ARS):</strong><br />
+                        <span class="h6">@(Model.NombreArs ?? "Particular (Sin Seguro)")</span>
+                    </div>
+                    @if (!string.IsNullOrEmpty(Model.NumeroAfiliacion))
+                    {
+                        <div class="col-md-6 border-start">
+                            <strong>Número de Afiliación:</strong><br />
+                            <code class="h6 text-dark">@Model.NumeroAfiliacion</code>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="card-footer">
+            <a asp-action="Index" class="btn btn-secondary">Volver al Listado</a>
+            <a asp-action="Editar" asp-route-id="@Model.Id" class="btn btn-warning">Editar Datos</a>
+        </div>
+    </div>
+</div>
