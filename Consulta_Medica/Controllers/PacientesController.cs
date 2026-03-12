@@ -37,7 +37,8 @@ namespace Consulta_Medica.Controllers
                 Id = p.Id,
                 TipoIdentificacion = p.TipoIdentificacion?.Nombre ?? "N/A",
                 Identificacion = p.Identificacion ?? "S/N",
-                NombreCompleto = $"{p.Nombres} {p.PrimerApellido}",
+                NombreCompleto = p.Nombres + " " + p.PrimerApellido +
+                 (!string.IsNullOrWhiteSpace(p.SegundoApellido) ? " " + p.SegundoApellido : ""),
                 NombreARS = p.ARS?.Nombre ?? "Privado"
             }).ToList();
 

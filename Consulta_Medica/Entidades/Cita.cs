@@ -7,14 +7,13 @@ namespace Consulta_Medica.Entidades
         [Key]
         public int Id { get; set; }
         [Required(ErrorMessage = "La fecha y hora son obligatorias")]
-        public DateTime FechaHora { get; set; }
-        //[Required()]
+        public DateTime FechaHora { get; set; }        
         public int PacienteId { get; set; }
         public Paciente Paciente { get; set; } = null!;        
         [Required(ErrorMessage = "El motivo de la consulta es obligatorio")]
         public string Motivo { get; set; } = string.Empty;
-        public string? Notas { get; set; }
-        public bool Asistio { get; set; } = false;
-        //Estado de la cita, activa, cancelada, pospuesta, completada
+        public string? Notas { get; set; }    
+        public int EstadoCitaId { get; set; }
+        public EstadoCita EstadoCita { get; set; } = null!;
     }
 }

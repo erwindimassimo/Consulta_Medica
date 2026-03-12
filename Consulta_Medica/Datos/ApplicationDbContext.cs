@@ -12,6 +12,7 @@ namespace Consulta_Medica.Datos
         }
         public DbSet<ARS> ARSs { get; set; }
         public DbSet<Cita> Citas { get; set; }
+        public DbSet<EstadoCita> EstadosCitas { get; set; }
         public DbSet<Contacto> Contactos { get; set; }
         public DbSet<Medicamento> Medicamentos { get; set; }
         public DbSet<Medico> Medicos { get; set; }

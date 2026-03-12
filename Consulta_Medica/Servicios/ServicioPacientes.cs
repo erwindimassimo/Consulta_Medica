@@ -1,4 +1,4 @@
-﻿using Consulta_Medica.Datos;
+﻿    using Consulta_Medica.Datos;
 using Consulta_Medica.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -59,5 +59,5 @@ namespace Consulta_Medica.Servicios
 
             return opciones;
         }
-    }
+    }    
 }
