@@ -23,6 +23,7 @@ namespace Consulta_Medica.Datos
         public DbSet<RecetaDetalle> RecetaDetalles { get; set; }
         public DbSet<TipoContacto> TiposContactos { get; set; }
         public DbSet<TipoIdentificacion> TiposIdentificaciones { get; set; }
+        public DbSet<Sexo> Sexos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

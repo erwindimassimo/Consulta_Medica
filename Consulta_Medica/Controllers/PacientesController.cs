@@ -29,7 +29,9 @@ namespace Consulta_Medica.Controllers
             var pacientes = await context.Pacientes
                 .Include(p => p.TipoIdentificacion)
                 .Include(p => p.ARS)
+                .Include(p => p.Sexo)
                 .Where(p => p.Activo)
+                .OrderBy(p => p.PrimerApellido)
                 .ToListAsync();
 
             var modelo = pacientes.Select(p => new PacienteListaViewModel
@@ -39,7 +41,8 @@ namespace Consulta_Medica.Controllers
                 Identificacion = p.Identificacion ?? "S/N",
                 NombreCompleto = p.Nombres + " " + p.PrimerApellido +
                  (!string.IsNullOrWhiteSpace(p.SegundoApellido) ? " " + p.SegundoApellido : ""),
-                NombreARS = p.ARS?.Nombre ?? "Privado"
+                NombreARS = p.ARS.Nombre,
+                Sexo = p.Sexo.Nombre
             }).ToList();
 
             return View(modelo);
@@ -51,6 +54,7 @@ namespace Consulta_Medica.Controllers
             var paciente = await context.Pacientes
                 .Include(p => p.TipoIdentificacion)
                 .Include(p => p.ARS)
+                .Include(p => p.Sexo)
                 .Include(p => p.PacienteContactos)
                     .ThenInclude(pc => pc.Contacto)
                         .ThenInclude(c => c.TipoContacto)
@@ -68,6 +72,7 @@ namespace Consulta_Medica.Controllers
                 PrimerApellido = paciente.PrimerApellido,
                 SegundoApellido = paciente.SegundoApellido,
                 FechaNacimiento = paciente.FechaNacimiento,
+                Sexo = paciente.Sexo.Nombre,
                 Edad = servicioPacientes.CalcularEdad(paciente.FechaNacimiento),
                 Direccion = paciente.Direccion,
                 Activo = paciente.Activo,
@@ -114,14 +119,14 @@ namespace Consulta_Medica.Controllers
                 PrimerApellido = modelo.PrimerApellido,
                 SegundoApellido = modelo.SegundoApellido,
                 Identificacion = modelo.Identificacion,
-                TipoIdentificacionId = (int)modelo.TipoIdentificacionId!,
+                TipoIdentificacionId = modelo.TipoIdentificacionId,
                 FechaNacimiento = modelo.FechaNacimiento,
-                Direccion = modelo.Direccion, // Corregido: Se agregó la dirección
-                ARSId = (int)modelo.ARSId!,
+                SexoId = modelo.SexoId,
+                Direccion = modelo.Direccion, 
+                ARSId = modelo.ARSId,
                 NumeroAfiliacion = modelo.NumeroAfiliacion,
                 FechaRegistro = DateTime.Now,
-                Activo = true,
-                // Inicializamos la lista de relaciones para evitar NullReferenceException
+                Activo = true,                
                 PacienteContactos = new List<PacienteContacto>()
             };
 
@@ -136,7 +141,6 @@ namespace Consulta_Medica.Controllers
                         {
                             TipoContactoId = i.TipoContactoId, // Viene del Select en la vista
                             Valor = i.Valor,
-                            TipoContacto = null! // Evita que EF intente crear un TipoContacto nuevo
                         };
 
                         var pacienteContacto = new PacienteContacto
@@ -178,6 +182,7 @@ namespace Consulta_Medica.Controllers
                 FechaNacimiento = paciente.FechaNacimiento,
                 TipoIdentificacionId = paciente.TipoIdentificacionId,
                 Identificacion = paciente.Identificacion,
+                SexoId = paciente.SexoId,
                 ARSId = paciente.ARSId,
                 NumeroAfiliacion = paciente.NumeroAfiliacion,
                 Direccion = paciente.Direccion,
@@ -220,6 +225,7 @@ namespace Consulta_Medica.Controllers
             paciente.FechaNacimiento = modelo.FechaNacimiento;
             paciente.Identificacion = modelo.Identificacion; // Se guarda con guiones según tu preferencia
             paciente.TipoIdentificacionId = modelo.TipoIdentificacionId;
+            paciente.SexoId = modelo.SexoId;
             paciente.ARSId = modelo.ARSId;
             paciente.NumeroAfiliacion = modelo.NumeroAfiliacion;
             paciente.Direccion = modelo.Direccion;

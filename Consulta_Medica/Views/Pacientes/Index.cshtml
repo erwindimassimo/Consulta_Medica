@@ -25,6 +25,7 @@
                         <tr>
                             <th class="ps-4 text-primary">Identificación</th>
                             <th class="text-primary">Nombre Completo</th>
+                            <th class="text-center text-primary">Sexo</th> @* <-- Nueva Columna *@
                             <th class="text-primary">Seguro Médico / ARS</th>
                             <th class="text-center text-primary pe-4">Acciones</th>
                         </tr>
@@ -34,19 +35,42 @@
                         {
                             <tr>
                                 <td class="ps-4 align-middle">
-                                    <span class="badge bg-info text-dark">@item.TipoIdentificacion</span>                                    
+                                    <span class="badge bg-info text-dark">@item.TipoIdentificacion</span>
                                     <span class="separador">:</span>
-                                    <span class="ms-1 fw-bold">@item.Identificacion</span>
+                                    <span class="ms-1 fw-bold text-nowrap">@item.Identificacion</span>
                                 </td>
                                 <td class="align-middle fw-semibold">@item.NombreCompleto</td>
+
+                                @* Lógica visual para el Sexo *@
+                                <td class="align-middle text-center">
+                                    @if (item.Sexo == "Masculino")
+                                    {
+                                        <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill">
+                                            <i class="bi bi-gender-male"></i> M
+                                        </span>
+                                    }
+                                    else if (item.Sexo == "Femenino")
+                                    {
+                                        <span class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill">
+                                            <i class="bi bi-gender-female"></i> F
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary-subtle text-secondary rounded-pill">
+                                            <i class="bi bi-gender-ambiguous"></i> O
+                                        </span>
+                                    }
+                                </td>
+
                                 <td class="align-middle">
-                                    @if (!string.IsNullOrEmpty(item.NombreARS) && item.NombreARS != "Particular")
+                                    @if (!string.IsNullOrEmpty(item.NombreARS) && item.NombreARS != "Particular" && item.NombreARS != "Privado")
                                     {
                                         <span class="text-primary"><i class="bi bi-shield-check me-1"></i>@item.NombreARS</span>
                                     }
                                     else
                                     {
-                                        <span class="text-muted italic">Privado / Particular</span>
+                                        <span class="text-muted fst-italic">Privado / Particular</span>
                                     }
                                 </td>
                                 <td class="text-center pe-4 align-middle">

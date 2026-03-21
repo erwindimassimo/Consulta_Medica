@@ -21,6 +21,8 @@ namespace Consulta_Medica.Models
         public int TipoIdentificacionId { get; set; }
         [StringLength(100)]
         public string? Identificacion { get; set; }
+        [Required(ErrorMessage = "Debe seleccionar el sexo")]
+        public int SexoId { get; set; }
         [Required(ErrorMessage = "Debe seleccionar una ARS")]
         public int ARSId { get; set; }
         [StringLength(50)]
@@ -30,6 +32,6 @@ namespace Consulta_Medica.Models
         [Display(Name = "Dirección completa")]
         public string Direccion { get; set; } = string.Empty;
         public bool Activo { get; set; } = true;
-        public OpcionesFormularioCrearViewModel? Opciones { get; set; }
+        public OpcionesFormularioPacienteViewModel? Opciones { get; set; }
     }
 }

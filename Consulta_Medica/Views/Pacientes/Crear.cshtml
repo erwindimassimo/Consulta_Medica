@@ -9,12 +9,13 @@
         <input type="hidden" id="datosContactosHidden" value='@Json.Serialize(Model.Opciones.ListaTiposContactos)' />
 
         <div class="card shadow border-0">
+            @* Card Header en Azul *@
             <div class="card-header bg-primary text-white py-3">
                 <h3 class="mb-0"><i class="bi bi-person-plus-fill me-2"></i>Registro de Nuevo Paciente</h3>
             </div>
 
             <div class="card-body p-4">
-                @* Sección 1 y 2: Datos Personales e Identidad (Igual que antes) *@
+                @* Sección 1: Datos Personales *@
                 <div class="row mb-4">
                     <div class="col-md-4">
                         <label asp-for="Nombres" class="form-label text-primary fw-bold small">Nombres</label>
@@ -30,55 +31,66 @@
                     </div>
                 </div>
 
+                @* Sección 2: Identidad, Sexo y Fecha *@
                 <div class="row mb-4">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label asp-for="TipoIdentificacionId" class="form-label text-primary fw-bold small">Tipo de Documento</label>
                         <select asp-for="TipoIdentificacionId" asp-items="Model.Opciones.ListaTiposIdentificaciones" class="form-select border-primary-subtle" id="cboTipoId">
                             <option value="">-- Seleccione --</option>
                         </select>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label asp-for="Identificacion" class="form-label text-primary fw-bold small">Número de Identidad</label>
                         <input asp-for="Identificacion" class="form-control border-primary-subtle" id="txtNumeroId" required />
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
+                        <label asp-for="SexoId" class="form-label text-primary fw-bold small">Sexo</label>
+                        <select asp-for="SexoId" asp-items="Model.Opciones.ListaSexos" class="form-select border-primary-subtle" required>
+                            <option value="">-- Seleccione --</option>
+                        </select>
+                        <span asp-validation-for="SexoId" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-3">
                         <label asp-for="FechaNacimiento" class="form-label text-primary fw-bold small">Fecha de Nacimiento</label>
                         <input asp-for="FechaNacimiento" type="date" class="form-control border-primary-subtle" required />
                     </div>
                 </div>
 
-                @* Sección 3 y 4: Dirección y Seguro (Igual que antes) *@
-                <div class="row mb-3">
+                @* Sección 3: Dirección *@
+                <div class="row mb-4">
                     <div class="col-md-12">
-                        <label asp-for="Direccion" class="form-label font-weight-bold"></label>
+                        <label asp-for="Direccion" class="form-label fw-bold text-primary small">Dirección completa</label>
                         <div class="input-group">
-                            <span class="input-group-text"><i class="bi bi-geo-alt"></i></span>
-                            <textarea asp-for="Direccion" class="form-control" rows="2"
-                                      placeholder="Calle, número, sector..."></textarea>
+                            <span class="input-group-text bg-primary-subtle text-primary border-primary-subtle">
+                                <i class="bi bi-geo-alt"></i>
+                            </span>
+                            <textarea asp-for="Direccion" class="form-control border-primary-subtle" rows="2" placeholder="Calle, número, sector..."></textarea>
                         </div>
                         <span asp-validation-for="Direccion" class="text-danger"></span>
                     </div>
                 </div>
+
+                @* Sección 4: Seguro Médico *@
                 <div class="bg-light p-3 rounded border-start border-4 border-primary mb-4 shadow-sm">
                     <h6 class="text-primary fw-bold mb-3">Seguro Médico</h6>
                     <div class="row">
                         <div class="col-md-6">
-                            <label asp-for="ARSId" class="form-label small">Aseguradora (ARS)</label>
-                            <select asp-for="ARSId" asp-items="Model.Opciones.ListaARSs" class="form-select" id="cboArs" required>
+                            <label asp-for="ARSId" class="form-label small text-primary fw-bold">Aseguradora (ARS)</label>
+                            <select asp-for="ARSId" asp-items="Model.Opciones.ListaARSs" class="form-select border-primary-subtle" id="cboArs" required>
                                 <option value="">-- Seleccione --</option>
                             </select>
                         </div>
                         <div class="col-md-6">
-                            <label asp-for="NumeroAfiliacion" class="form-label small">Número de Afiliación</label>
-                            <input asp-for="NumeroAfiliacion" class="form-control" id="txtAfiliacion" required />
+                            <label asp-for="NumeroAfiliacion" class="form-label small text-primary fw-bold">Número de Afiliación</label>
+                            <input asp-for="NumeroAfiliacion" class="form-control border-primary-subtle" id="txtAfiliacion" required />
                         </div>
                     </div>
                 </div>
 
-                @* Sección 5: Contactos (Dinamismo puro) *@
+                @* Sección 5: Contactos *@
                 <div class="row mt-4">
                     <div class="col-12">
-                        <div class="d-flex justify-content-between align-items-center border-bottom border-primary-subtle pb-2 mb-3">
+                        <div class="d-flex justify-content-between align-items-center border-bottom border-primary pb-2 mb-3">
                             <h6 class="text-primary fw-bold mb-0"><i class="bi bi-telephone-plus me-2"></i>Información de Contacto</h6>
                             <button type="button" id="btnAgregarContacto" class="btn btn-sm btn-primary rounded-pill px-3">
                                 <i class="bi bi-plus-circle me-1"></i> Añadir Contacto
@@ -91,9 +103,14 @@
                 </div>
             </div>
 
+            @* Footer con botones azules *@
             <div class="card-footer bg-white py-3 d-flex justify-content-between">
-                <a asp-action="Index" class="btn btn-outline-secondary px-4">Cancelar</a>
-                <button type="submit" class="btn btn-primary px-5 shadow">Guardar Paciente</button>
+                <a asp-action="Index" class="btn btn-outline-primary px-4 rounded-pill">
+                    <i class="bi bi-arrow-left me-1"></i> Cancelar
+                </a>
+                <button type="submit" class="btn btn-primary px-5 shadow rounded-pill">
+                    <i class="bi bi-save me-1"></i> Guardar Paciente
+                </button>
             </div>
         </div>
     </form>
@@ -129,32 +146,30 @@
 
             div.innerHTML = `
                 <div class="col-md-4">
-                    <select name="Contactos[${contadorContactos}].TipoContactoId" class="form-select sel-tipo" required>
+                    <select name="Contactos[${contadorContactos}].TipoContactoId" class="form-select border-primary-subtle sel-tipo" required>
                         ${opcionesHtml}
                     </select>
                 </div>
                 <div class="col-md-6">
-                    <input name="Contactos[${contadorContactos}].Valor" class="form-control input-valor" placeholder="Seleccione tipo..." required />
+                    <input name="Contactos[${contadorContactos}].Valor" class="form-control border-primary-subtle input-valor" placeholder="Seleccione tipo..." required />
                 </div>
                 <div class="col-md-2 text-end">
                     ${!esPrimero ? `
                         <button type="button" class="btn btn-outline-danger border-0" onclick="this.closest('.contacto-item').remove()">
                             <i class="bi bi-trash3-fill"></i>
                         </button>` :
-                        '<span class="badge bg-primary-subtle text-primary p-2">Principal</span>'}
+                        '<span class="badge bg-primary-subtle text-primary border border-primary-subtle p-2">Principal</span>'}
                 </div>
             `;
 
             contenedor.appendChild(div);
 
-            // Lógica de Placeholder Inteligente y Validación
             const select = div.querySelector('.sel-tipo');
             const input = div.querySelector('.input-valor');
 
             select.addEventListener('change', function() {
                 const textoSeleccionado = this.options[this.selectedIndex].text.toLowerCase();
 
-                // Si es correo, pone ejemplo de correo, si no, de número
                 if (textoSeleccionado.includes('correo') || textoSeleccionado.includes('email')) {
                     input.placeholder = "ejemplo@correo.com";
                     input.type = "email";
@@ -163,12 +178,16 @@
                     input.type = "text";
                 }
 
-                // Validar duplicados
                 const todos = document.querySelectorAll('.sel-tipo');
                 let repetido = false;
                 todos.forEach(s => { if (s !== this && s.value === this.value && this.value !== "") repetido = true; });
                 if (repetido) {
-                    Swal.fire('Atención', 'Este tipo de contacto ya está en la lista', 'warning');
+                    Swal.fire({
+                        title: 'Atención',
+                        text: 'Este tipo de contacto ya está en la lista',
+                        icon: 'warning',
+                        confirmButtonColor: '#0d6efd'
+                    });
                     this.value = "";
                     input.placeholder = "Seleccione tipo...";
                 }
@@ -180,7 +199,6 @@
         document.addEventListener("DOMContentLoaded", function() {
             document.getElementById('btnAgregarContacto').onclick = () => agregarFilaContacto(false);
 
-            // Lógica de Identificación y ARS (IDs fijos de BD)
             const gestionar = (idCbo, idTxt, idFijo, placeholder) => {
                 const cbo = document.getElementById(idCbo);
                 const txt = document.getElementById(idTxt);

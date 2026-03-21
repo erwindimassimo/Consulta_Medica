@@ -36,17 +36,19 @@
                             <tr>
                                 @* 1. HORA Y FECHA (Siguiendo tu formato de badge y separador) *@
                                 <td class="ps-4 align-middle">
-                                    <span class="badge bg-info text-dark">@item.FechaHora.ToString("hh:mm tt")</span>
-                                    <span class="separador">:</span>
                                     <span class="ms-1 fw-bold text-muted" style="font-size: 0.85rem;">
                                         @item.FechaHora.ToString("dd/MM")
                                     </span>
+                                    <span class="badge bg-info text-dark">@item.FechaHora.ToString("hh:mm tt")</span>
                                 </td>
 
                                 @* 2. NOMBRE DEL PACIENTE *@
                                 <td class="align-middle fw-semibold">@item.NombreCompleto</td>
 
                                 @* 3. ESTADO Y MOTIVO (Adaptado de tu lógica de ARS) *@
+                                <td class="align-middle fw-semibold">
+                                    @item.Motivo
+                                </td>
                                 <td class="align-middle">
                                     @if (item.EstadoCitaId == 1) // Supongamos 1 = Programada
                                     {
@@ -60,7 +62,7 @@
                                     {
                                         <span class="text-muted italic">@item.EstadoCita</span>
                                     }
-                                    <div class="text-muted" style="font-size: 0.75rem;">Modo: @item.Motivo</div>
+                                    
                                 </td>
 
                                 @* 4. ACCIONES (Botón redondeado como el tuyo) *@

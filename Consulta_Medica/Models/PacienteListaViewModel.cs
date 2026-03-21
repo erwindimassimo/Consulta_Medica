@@ -6,6 +6,7 @@
         public required string NombreCompleto { get; set; }
         public required string TipoIdentificacion { get; set; }
         public string? Identificacion { get; set; }
+        public string Sexo { get; set; } = null!;
         public bool TieneSeguro { get; set; } = false;
         public string? NombreARS { get; set; }
     }

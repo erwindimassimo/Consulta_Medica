@@ -5,20 +5,17 @@
 }
 
 <div class="container mt-4">
-    @* 1. CAMBIO: Acción "Editar" y añadir el ID oculto *@
     <form asp-action="Editar" method="post" id="formPaciente">
         <input type="hidden" asp-for="Id" />
-
-        @* Datos para el JS *@
         <input type="hidden" id="datosContactosHidden" value='@Json.Serialize(Model.Opciones.ListaTiposContactos)' />
 
         <div class="card shadow border-0">
-            <div class="card-header bg-warning text-dark py-3">
+            <div class="card-header bg-primary text-white py-3">
                 <h3 class="mb-0"><i class="bi bi-pencil-square me-2"></i>Editar Datos del Paciente</h3>
             </div>
 
             <div class="card-body p-4">
-                @* Sección Datos Personales *@
+                @* Sección 1: Datos Personales *@
                 <div class="row mb-4">
                     <div class="col-md-4">
                         <label asp-for="Nombres" class="form-label text-primary fw-bold small">Nombres</label>
@@ -34,71 +31,77 @@
                     </div>
                 </div>
 
+                @* Sección 2: Identidad, Sexo y Fecha *@
                 <div class="row mb-4">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label asp-for="TipoIdentificacionId" class="form-label text-primary fw-bold small">Tipo de Documento</label>
                         <select asp-for="TipoIdentificacionId" asp-items="Model.Opciones.ListaTiposIdentificaciones" class="form-select border-primary-subtle" id="cboTipoId">
                             <option value="">-- Seleccione --</option>
                         </select>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label asp-for="Identificacion" class="form-label text-primary fw-bold small">Número de Identidad</label>
                         <input asp-for="Identificacion" class="form-control border-primary-subtle" id="txtNumeroId" required />
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
+                        <label asp-for="SexoId" class="form-label text-primary fw-bold small">Sexo</label>
+                        <select asp-for="SexoId" asp-items="Model.Opciones.ListaSexos" class="form-select border-primary-subtle" required>
+                            <option value="">-- Seleccione --</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
                         <label asp-for="FechaNacimiento" class="form-label text-primary fw-bold small">Fecha de Nacimiento</label>
                         <input asp-for="FechaNacimiento" type="date" class="form-control border-primary-subtle" required />
                     </div>
                 </div>
 
-                <div class="row mb-3">
+                @* Sección 3: Dirección *@
+                <div class="row mb-4">
                     <div class="col-md-12">
                         <label asp-for="Direccion" class="form-label fw-bold text-primary small">Dirección completa</label>
                         <div class="input-group">
-                            <span class="input-group-text"><i class="bi bi-geo-alt"></i></span>
-                            <textarea asp-for="Direccion" class="form-control" rows="2" placeholder="Calle, número, sector..."></textarea>
+                            <span class="input-group-text bg-primary-subtle text-primary border-primary-subtle"><i class="bi bi-geo-alt"></i></span>
+                            <textarea asp-for="Direccion" class="form-control border-primary-subtle" rows="2" placeholder="Calle, número, sector..."></textarea>
                         </div>
-                        <span asp-validation-for="Direccion" class="text-danger"></span>
                     </div>
                 </div>
 
+                @* Sección 4: Seguro Médico *@
                 <div class="bg-light p-3 rounded border-start border-4 border-primary mb-4 shadow-sm">
                     <h6 class="text-primary fw-bold mb-3">Seguro Médico</h6>
                     <div class="row">
                         <div class="col-md-6">
-                            <label asp-for="ARSId" class="form-label small">Aseguradora (ARS)</label>
-                            <select asp-for="ARSId" asp-items="Model.Opciones.ListaARSs" class="form-select" id="cboArs" required>
+                            <label asp-for="ARSId" class="form-label small text-primary fw-bold">Aseguradora (ARS)</label>
+                            <select asp-for="ARSId" asp-items="Model.Opciones.ListaARSs" class="form-select border-primary-subtle" id="cboArs" required>
                                 <option value="">-- Seleccione --</option>
                             </select>
                         </div>
                         <div class="col-md-6">
-                            <label asp-for="NumeroAfiliacion" class="form-label small">Número de Afiliación</label>
-                            <input asp-for="NumeroAfiliacion" class="form-control" id="txtAfiliacion" />
+                            <label asp-for="NumeroAfiliacion" class="form-label small text-primary fw-bold">Número de Afiliación</label>
+                            <input asp-for="NumeroAfiliacion" class="form-control border-primary-subtle" id="txtAfiliacion" />
                         </div>
                     </div>
                 </div>
 
-                @* Sección Contactos *@
+                @* Sección 5: Contactos *@
                 <div class="row mt-4">
                     <div class="col-12">
-                        <div class="d-flex justify-content-between align-items-center border-bottom border-primary-subtle pb-2 mb-3">
+                        <div class="d-flex justify-content-between align-items-center border-bottom border-primary pb-2 mb-3">
                             <h6 class="text-primary fw-bold mb-0"><i class="bi bi-telephone-plus me-2"></i>Información de Contacto</h6>
                             <button type="button" id="btnAgregarContacto" class="btn btn-sm btn-primary rounded-pill px-3">
                                 <i class="bi bi-plus-circle me-1"></i> Añadir Contacto
                             </button>
                         </div>
-                        <div id="contenedorContactos">
-                            @* Se llenará mediante JS con los datos del Model *@
-                        </div>
+                        <div id="contenedorContactos"></div>
                     </div>
                 </div>
             </div>
 
             <div class="card-footer bg-white py-3 d-flex justify-content-between">
-                <a asp-action="Detalle" asp-route-id="@Model.Id" class="btn btn-outline-secondary px-4">
+                <a asp-action="Detalle" asp-route-id="@Model.Id" class="btn btn-outline-primary px-4">
                     <i class="bi bi-arrow-left me-1"></i> Cancelar
                 </a>
-                <button type="submit" class="btn btn-success px-5 shadow">Guardar Cambios</button>
+                <button type="submit" class="btn btn-primary px-5 shadow">Guardar Cambios</button>
             </div>
         </div>
     </form>
@@ -108,13 +111,71 @@
     <partial name="_ValidationScriptsPartial" />
 
     <script>
+        // --- Variables de Estado y Datos de la Base de Datos ---
         let listaTiposContactos = [];
         let contadorContactos = 0;
+
+        // "Memoria" para no perder los datos que ya están guardados
+        const dataOriginal = {
+            tipoId: "@Model.TipoIdentificacionId",
+            identificacion: "@Model.Identificacion",
+            arsId: "@Model.ARSId",
+            afiliacion: "@Model.NumeroAfiliacion"
+        };
+
+        document.addEventListener("DOMContentLoaded", function () {
+            // 1. Cargar Tipos de Contactos
+            const inputHidden = document.getElementById('datosContactosHidden');
+            if (inputHidden) listaTiposContactos = JSON.parse(inputHidden.value);
+
+            // 2. Función de Gestión (Basada en tu vista Crear)
+            const gestionar = (idCbo, idTxt, idFijo, valOriginal, idOriginal, placeholder) => {
+                const cbo = document.getElementById(idCbo);
+                const txt = document.getElementById(idTxt);
+
+                if (cbo && txt) {
+                    const refrescar = (esInicio) => {
+                        const esBloqueado = cbo.value === idFijo;
+                        txt.disabled = esBloqueado;
+
+                        if (esBloqueado) {
+                            txt.value = ""; // Borra el dato como en "Crear"
+                            txt.placeholder = "No aplica";
+                        } else {
+                            // SI regresamos a la opción original de la BD, recuperamos el valor
+                            if (cbo.value === idOriginal) {
+                                txt.value = valOriginal;
+                            } else if (!esInicio) {
+                                // SI es una opción nueva y no es el inicio, limpiamos
+                                txt.value = "";
+                            }
+                            txt.placeholder = placeholder;
+                        }
+                    };
+
+                    cbo.addEventListener('change', () => refrescar(false));
+                    refrescar(true); // Ejecución inicial
+                }
+            };
+
+            // Aplicar reglas: ID "1" suele ser "Menor" y "Sin Seguro"
+            gestionar('cboTipoId', 'txtNumeroId', "1", dataOriginal.identificacion, dataOriginal.tipoId, "Ingrese documento");
+            gestionar('cboArs', 'txtAfiliacion', "1", dataOriginal.afiliacion, dataOriginal.arsId, "Número de carnet");
+
+            // 3. Cargar Contactos Existentes
+            const contactosExistentes = @Html.Raw(Json.Serialize(Model.Contactos ?? new List<ContactoViewModel>()));
+            if (contactosExistentes && contactosExistentes.length > 0) {
+                contactosExistentes.forEach((c, index) => agregarFilaContacto(c.tipoContactoId, c.valor, index === 0));
+            } else {
+                agregarFilaContacto("", "", true);
+            }
+
+            document.getElementById('btnAgregarContacto').onclick = () => agregarFilaContacto();
+        });
 
         function agregarFilaContacto(tipoId = "", valor = "", esPrimero = false) {
             const contenedor = document.getElementById('contenedorContactos');
             const filasActuales = document.querySelectorAll('.contacto-item').length;
-
             if (filasActuales >= listaTiposContactos.length && tipoId === "") return;
 
             const div = document.createElement('div');
@@ -128,60 +189,20 @@
 
             div.innerHTML = `
                 <div class="col-md-4">
-                    <select name="Contactos[${contadorContactos}].TipoContactoId" class="form-select sel-tipo" required>
+                    <select name="Contactos[${contadorContactos}].TipoContactoId" class="form-select border-primary-subtle sel-tipo" required>
                         ${opcionesHtml}
                     </select>
                 </div>
                 <div class="col-md-6">
-                    <input name="Contactos[${contadorContactos}].Valor" value="${valor}" class="form-control input-valor" placeholder="Ingrese dato..." required />
+                    <input name="Contactos[${contadorContactos}].Valor" value="${valor}" class="form-control border-primary-subtle input-valor" required placeholder="Dato de contacto..." />
                 </div>
                 <div class="col-md-2 text-end">
-                    ${!esPrimero ? `
-                        <button type="button" class="btn btn-outline-danger border-0" onclick="this.closest('.contacto-item').remove()">
-                            <i class="bi bi-trash3-fill"></i>
-                        </button>` :
-                        '<span class="badge bg-primary-subtle text-primary p-2">Principal</span>'}
+                    ${!esPrimero ? `<button type="button" class="btn btn-outline-danger border-0" onclick="this.closest('.contacto-item').remove()"><i class="bi bi-trash3-fill"></i></button>` :
+                    '<span class="badge bg-primary-subtle text-primary border border-primary-subtle p-2">Principal</span>'}
                 </div>
             `;
-
             contenedor.appendChild(div);
-
-            // LOGICA PARA NO REPETIR CONTACTOS
-            const select = div.querySelector('.sel-tipo');
-            select.addEventListener('change', function() {
-                const todos = document.querySelectorAll('.sel-tipo');
-                let repetido = false;
-                todos.forEach(s => {
-                    if (s !== this && s.value === this.value && this.value !== "") repetido = true;
-                });
-
-                if (repetido) {
-                    Swal.fire('Atención', 'Este tipo de contacto ya está en la lista', 'warning');
-                    this.value = "";
-                }
-            });
-
             contadorContactos++;
         }
-
-        document.addEventListener("DOMContentLoaded", function() {
-            const inputHidden = document.getElementById('datosContactosHidden');
-            if (inputHidden) listaTiposContactos = JSON.parse(inputHidden.value);
-
-            // CARGA SEGURA DE CONTACTOS
-            const contactosExistentes = @Html.Raw(Json.Serialize(Model.Contactos ?? new List<ContactoViewModel>()));
-
-            if (contactosExistentes && contactosExistentes.length > 0) {
-                contactosExistentes.forEach((c, index) => {
-                    agregarFilaContacto(c.tipoContactoId, c.valor, index === 0);
-                });
-            } else {
-                agregarFilaContacto("", "", true);
-            }
-
-            document.getElementById('btnAgregarContacto').onclick = () => agregarFilaContacto();
-
-            // ... (aquí puedes poner la lógica de gestionarCampo que ya tenías)
-        });
     </script>
 }

@@ -8,7 +8,7 @@ namespace Consulta_Medica.Servicios
     public interface IServicioPacientes
     {
         int CalcularEdad(DateTime fechaNacimiento);
-        Task<OpcionesFormularioCrearViewModel> ObtenerOpcionesFormulario();
+        Task<OpcionesFormularioPacienteViewModel> ObtenerOpcionesFormulario();
     }
     public class ServicioPacientes : IServicioPacientes
     {
@@ -29,9 +29,9 @@ namespace Consulta_Medica.Servicios
             return edad;
         }      
     
-        public async Task<OpcionesFormularioCrearViewModel> ObtenerOpcionesFormulario()
+        public async Task<OpcionesFormularioPacienteViewModel> ObtenerOpcionesFormulario()
         {
-            var opciones = new OpcionesFormularioCrearViewModel();
+            var opciones = new OpcionesFormularioPacienteViewModel();
             
             opciones.ListaTiposIdentificaciones = await context.TiposIdentificaciones
                 .OrderBy(x => x.Id)
@@ -56,6 +56,14 @@ namespace Consulta_Medica.Servicios
                 Value = x.Id.ToString(),
                 Text = x.Nombre
             }).ToListAsync();
+
+            opciones.ListaSexos = await context.Sexos
+                .OrderBy(s => s.Id)
+                .Select(s => new SelectListItem
+                {
+                    Value = s.Id.ToString(),
+                    Text = s.Nombre
+                }).ToListAsync();
 
             return opciones;
         }

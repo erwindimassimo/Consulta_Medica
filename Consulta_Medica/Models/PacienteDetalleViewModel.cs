@@ -12,6 +12,7 @@ namespace Consulta_Medica.Models
         public int Edad {  get; set; }
         public required string TipoIdentificacion { get; set; }
         public string? Identificacion { get; set; }
+        public string Sexo { get; set; } = null!;
         public string? NombreArs { get; set; }
         public string? NumeroAfiliacion { get; set; }
         public string Direccion { get; set; } = string.Empty;

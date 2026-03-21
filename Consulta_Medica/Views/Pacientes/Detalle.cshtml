@@ -5,98 +5,144 @@
 }
 
 <div class="container mt-4">
-    <div class="card shadow">
-        <div class="card-header bg-primary text-white">
-            <h3 class="mb-0">Ficha Técnica del Paciente: @Model.Nombres @Model.PrimerApellido @Model.SegundoApellido</h3>
+    <div class="card shadow border-0">
+        @* Card Header en Azul *@
+        <div class="card-header bg-primary text-white py-3 d-flex justify-content-between align-items-center">
+            <h3 class="mb-0">
+                <i class="bi bi-person-vcard me-2"></i>Ficha del Paciente
+            </h3>
             @if (Model.Activo)
             {
-                <span class="badge rounded-pill bg-light text-success px-3 py-2">
-                    <i class="bi bi-check-circle-fill"></i> PACIENTE ACTIVO
+                <span class="badge rounded-pill bg-light text-primary px-3 py-2 fw-bold">
+                    <i class="bi bi-check-circle-fill me-1"></i> ACTIVO
                 </span>
             }
             else
             {
-                <span class="badge rounded-pill bg-danger px-3 py-2 text-white">
-                    <i class="bi bi-x-circle-fill"></i> PACIENTE INACTIVO
+                <span class="badge rounded-pill bg-secondary text-white px-3 py-2 fw-bold">
+                    <i class="bi bi-x-circle-fill me-1"></i> INACTIVO
                 </span>
             }
         </div>
 
-        <div class="card-body">
+        <div class="card-body p-4">
+            @* Fila de Nombre Completo *@
             <div class="row mb-4">
                 <div class="col-md-4">
-                    <label class="text-muted d-block">Nombres</label>
+                    <label class="text-primary fw-bold small d-block">Nombres</label>
                     <span class="h5">@Model.Nombres</span>
                 </div>
                 <div class="col-md-4">
-                    <label class="text-muted d-block">Primer Apellido</label>
+                    <label class="text-primary fw-bold small d-block">Primer Apellido</label>
                     <span class="h5">@Model.PrimerApellido</span>
                 </div>
                 <div class="col-md-4">
-                    <label class="text-muted d-block">Segundo Apellido</label>
+                    <label class="text-primary fw-bold small d-block">Segundo Apellido</label>
                     <span class="h5">@(Model.SegundoApellido ?? "---")</span>
                 </div>
             </div>
 
-            <hr />
+            <hr class="text-primary opacity-25" />
 
+            @* Fila de Identificación, Sexo y Edad *@
             <div class="row mb-4">
-                <div class="col-md-6">
-                    <strong>@Model.TipoIdentificacion:</strong> 
-                    <span class="fw-bold">@Model.Identificacion</span>
+                <div class="col-md-3">
+                    <label class="text-primary fw-bold small d-block">@Model.TipoIdentificacion</label>
+                    <span class="fw-bold h6">@Model.Identificacion</span>
                 </div>
-                <div class="col-md-6">
-                    <strong>Fecha de Nacimiento:</strong> @Model.FechaNacimiento.ToShortDateString()
+                <div class="col-md-3">
+                    <label class="text-primary fw-bold small d-block">Sexo</label>
+                    <span class="h6">
+                        @if (Model.Sexo == "Masculino")
+                        {
+                            <i class="bi bi-gender-male text-primary me-1"></i> 
+                            @Model.Sexo
+                        }
+                        else if (Model.Sexo == "Femenino")
+                        {
+                            <i class="bi bi-gender-female text-danger me-1"></i> 
+                            @Model.Sexo
+                        }
+                        else
+                        {
+                            <i class="bi bi-gender-ambiguous text-secondary me-1"></i> 
+                            @Model.Sexo
+                        }
+                    </span>
+                </div>
+                <div class="col-md-3">
+                    <label class="text-primary fw-bold small d-block">Fecha de Nacimiento</label>
+                    <span class="h6">@Model.FechaNacimiento.ToLongDateString()</span>
+                </div>
+                <div class="col-md-3">
+                    <label class="text-primary fw-bold small d-block">Edad</label>
+                    <span class="badge bg-primary px-3">@Model.Edad años</span>
                 </div>
             </div>
 
-            <div class="col-md-12">
-                <label class="text-muted d-block">Dirección</label>
-                <span class="h5">@Model.Direccion</span>
-            </div>
-
+            @* Dirección *@
             <div class="row mb-4">
                 <div class="col-12">
-                    <h6 class="text-muted border-bottom pb-2">Métodos de Contacto</h6>
-                    <div class="d-flex flex-wrap gap-2 mt-2">
+                    <label class="text-primary fw-bold small d-block">Dirección Residencia</label>
+                    <span class="h6 text-muted"><i class="bi bi-geo-alt-fill me-1"></i> @Model.Direccion</span>
+                </div>
+            </div>
+
+            @* Sección Contactos *@
+            <div class="row mb-4">
+                <div class="col-12">
+                    <h6 class="text-primary fw-bold border-bottom border-primary-subtle pb-2 mb-3">
+                        <i class="bi bi-chat-left-text me-2"></i>Información de Contacto
+                    </h6>
+                    <div class="d-flex flex-wrap gap-3">
                         @if (Model.Contactos != null && Model.Contactos.Any())
                         {
                             @foreach (var con in Model.Contactos)
                             {
-                                <div class="badge bg-info text-dark p-2 border shadow-sm">
+                                <div class="badge bg-primary-subtle text-primary p-2 border border-primary-subtle rounded-3 shadow-sm">
                                     <i class="bi bi-telephone-fill me-1"></i>
-                                    <strong>@con.TipoNombre:</strong> @con.Valor
+                                    <span class="fw-bold text-uppercase">@con.TipoNombre:</span>
+                                    <span class="ms-1">@con.Valor</span>
                                 </div>
                             }
                         }
                         else
                         {
-                            <span class="text-danger italic small">No se han registrado teléfonos o correos.</span>
+                            <span class="text-muted fst-italic small">No se han registrado métodos de contacto.</span>
                         }
                     </div>
                 </div>
             </div>
 
-            <div class="bg-light p-3 rounded border-start border-4 border-primary">
-                <div class="row">
+            @* Seguro Médico (ARS) - Cuadro Azul *@
+            <div class="bg-primary-subtle p-3 rounded border-start border-4 border-primary shadow-sm">
+                <div class="row align-items-center">
                     <div class="col-md-6">
-                        <strong>Aseguradora (ARS):</strong><br />
-                        <span class="h6">@(Model.NombreArs ?? "Particular (Sin Seguro)")</span>
+                        <label class="text-primary fw-bold small d-block text-uppercase">Aseguradora (ARS)</label>
+                        <span class="h6 mb-0 fw-bold">
+                            <i class="bi bi-shield-check me-1"></i>
+                            @(Model.NombreArs ?? "Particular (Sin Seguro)")
+                        </span>
                     </div>
                     @if (!string.IsNullOrEmpty(Model.NumeroAfiliacion))
                     {
-                        <div class="col-md-6 border-start">
-                            <strong>Número de Afiliación:</strong><br />
-                            <code class="h6 text-dark">@Model.NumeroAfiliacion</code>
+                        <div class="col-md-6 border-start border-primary-subtle">
+                            <label class="text-primary fw-bold small d-block text-uppercase">No. Afiliación</label>
+                            <code class="h6 text-primary fw-bold mb-0">@Model.NumeroAfiliacion</code>
                         </div>
                     }
                 </div>
             </div>
         </div>
 
-        <div class="card-footer">
-            <a asp-action="Index" class="btn btn-secondary">Volver al Listado</a>
-            <a asp-action="Editar" asp-route-id="@Model.Id" class="btn btn-warning">Editar Datos</a>
+        @* Footer con botones azules y grises *@
+        <div class="card-footer bg-white py-3 d-flex justify-content-between">
+            <a asp-action="Index" class="btn btn-outline-secondary px-4 rounded-pill">
+                <i class="bi bi-arrow-left me-1"></i> Volver al Listado
+            </a>
+            <a asp-action="Editar" asp-route-id="@Model.Id" class="btn btn-primary px-4 rounded-pill shadow">
+                <i class="bi bi-pencil-square me-1"></i> Editar Información
+            </a>
         </div>
     </div>
 </div>

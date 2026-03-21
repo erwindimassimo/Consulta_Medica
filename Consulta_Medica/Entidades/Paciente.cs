@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore.Storage;
+using System.ComponentModel.DataAnnotations;
 
 namespace Consulta_Medica.Entidades
 {
@@ -19,14 +20,16 @@ namespace Consulta_Medica.Entidades
         public DateTime FechaNacimiento { get; set; }
         [Required]
         public int TipoIdentificacionId { get; set; }
-        public virtual TipoIdentificacion TipoIdentificacion { get; set; } = null!;        
+        public TipoIdentificacion TipoIdentificacion { get; set; } = null!;        
         public string? Identificacion { get; set; }
+        public int SexoId { get; set; }
+        public Sexo Sexo { get; set; } = null!;
         [Required]
         public int ARSId { get; set; }
-        public virtual ARS ARS { get; set; } = null!;
+        public ARS ARS { get; set; } = null!;
         [StringLength(50)]
         public string? NumeroAfiliacion { get; set; }        
-        public virtual ICollection<PacienteContacto> PacienteContactos { get; set; } = new List<PacienteContacto>();
+        public ICollection<PacienteContacto> PacienteContactos { get; set; } = new List<PacienteContacto>();
         [Required(ErrorMessage="La dirección es obligatoria")]
         [Display(Name="Dirección completa")]
         public string Direccion { get; set; } = string.Empty;
