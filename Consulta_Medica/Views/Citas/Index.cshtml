@@ -7,67 +7,102 @@
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="text-primary fw-bold">
-            <i class="bi bi-people-fill me-2"></i>Gestión de Citas
+            <i class="bi bi-calendar-check me-2"></i>Gestión de Citas
         </h2>
         <a asp-action="Crear" class="btn btn-primary shadow-sm px-4">
-            <i class="bi bi-person-plus-fill me-1"></i> Registrar Nueva Cita
+            <i class="bi bi-calendar-plus me-1"></i> Registrar Nueva Cita
         </a>
+    </div>
+
+    <div class="card shadow-sm border-0 mb-4 bg-light">
+        <div class="card-body">
+            <form method="get" asp-action="Index" class="row g-3 align-items-end">
+                <div class="col-md-3">
+                    <label class="form-label small fw-bold text-secondary">Buscar Paciente</label>
+                    <input type="text" name="buscarPaciente" class="form-control" placeholder="Nombre del paciente..." value="@ViewContext.HttpContext.Request.Query["buscarPaciente"]">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label small fw-bold text-secondary">Médico</label>
+                    <input type="text" name="buscarMedico" class="form-control" placeholder="Nombre del médico..." value="@ViewContext.HttpContext.Request.Query["buscarMedico"]">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label small fw-bold text-secondary">Fecha</label>
+                    <input type="date" name="fechaFiltro" class="form-control" value="@ViewContext.HttpContext.Request.Query["fechaFiltro"]">
+                </div>
+                <div class="col-md-3 d-flex gap-2">
+                    <button type="submit" class="btn btn-outline-primary w-100">
+                        <i class="bi bi-search me-1"></i> Filtrar
+                    </button>
+                    <a asp-action="Index" class="btn btn-outline-secondary w-100">
+                        <i class="bi bi-x-circle me-1"></i> Limpiar
+                    </a>
+                </div>
+            </form>
+        </div>
     </div>
 
     <div class="card shadow border-0">
         <div class="card-header bg-primary text-white py-3">
-            <h5 class="mb-0"><i class="bi bi-list-ul me-2"></i>Citas del día</h5>
+            <h5 class="mb-0"><i class="bi bi-list-ul me-2"></i>Citas Programadas</h5>
         </div>
         <div class="card-body p-0">
             <div class="table-responsive">
                 <table class="table table-hover mb-0">
                     <thead class="table-light">
                         <tr>
-                            <th class="ps-4 text-primary">Fecha y hora</th>
-                            <th class="text-primary">Nombre Completo</th>
+                            <th class="ps-4 text-primary">Fecha y Hora</th>
+                            <th class="text-primary">Paciente</th>
+                            <th class="text-primary">Médico Asignado</th>
                             <th class="text-primary">Motivo</th>
                             <th class="text-primary">Estado</th>
                             <th class="text-center text-primary pe-4">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
+                        @if (!Model.Any())
+                        {
+                            <tr>
+                                <td colspan="6" class="text-center py-5 text-muted">
+                                    <i class="bi bi-info-circle me-2"></i> No se encontraron citas con los filtros aplicados.
+                                </td>
+                            </tr>
+                        }
                         @foreach (var item in Model)
                         {
                             <tr>
-                                @* 1. HORA Y FECHA (Siguiendo tu formato de badge y separador) *@
                                 <td class="ps-4 align-middle">
-                                    <span class="ms-1 fw-bold text-muted" style="font-size: 0.85rem;">
-                                        @item.FechaHora.ToString("dd/MM")
+                                    <span class="fw-bold text-muted" style="font-size: 0.85rem;">
+                                        @item.FechaHora.ToString("dd/MM/yyyy")
                                     </span>
-                                    <span class="badge bg-info text-dark">@item.FechaHora.ToString("hh:mm tt")</span>
+                                    <span class="badge bg-info text-dark ms-1">@item.FechaHora.ToString("hh:mm tt")</span>
                                 </td>
-
-                                @* 2. NOMBRE DEL PACIENTE *@
-                                <td class="align-middle fw-semibold">@item.NombreCompleto</td>
-
-                                @* 3. ESTADO Y MOTIVO (Adaptado de tu lógica de ARS) *@
-                                <td class="align-middle fw-semibold">
-                                    @item.Motivo
-                                </td>
+                                <td class="align-middle fw-semibold text-dark">@item.NombreCompletoPaciente</td>
                                 <td class="align-middle">
-                                    @if (item.EstadoCitaId == 1) // Supongamos 1 = Programada
-                                    {
-                                        <span class="text-primary"><i class="bi bi-calendar-event me-1"></i>@item.EstadoCita</span>
-                                    }
-                                    else if (item.EstadoCitaId == 2) // Supongamos 2 = En Espera/Llegó
-                                    {
-                                        <span class="text-warning fw-bold"><i class="bi bi-clock-history me-1"></i>@item.EstadoCita</span>
-                                    }
-                                    else
-                                    {
-                                        <span class="text-muted italic">@item.EstadoCita</span>
-                                    }
-                                    
+                                    <span class="text-secondary small">
+                                        <i class="bi bi-person-badge me-1"></i>@item.NombreCompletoMedico
+                                    </span>
                                 </td>
-
-                                @* 4. ACCIONES (Botón redondeado como el tuyo) *@
+                                <td class="align-middle fw-semibold">@item.Motivo</td>
+                                <td class="align-middle">
+                                    @switch (item.EstadoCitaId)
+                                    {
+                                        case 1: // Programada
+                                                <span class="badge rounded-pill bg-primary-subtle text-primary border border-primary-subtle px-3">
+                                                    <i class="bi bi-calendar-event me-1"></i>@item.EstadoCita
+                                                </span>
+                                            break;
+                                        case 2: // En Espera
+                                                <span class="badge rounded-pill bg-warning-subtle text-warning-emphasis border border-warning-subtle px-3">
+                                                    <i class="bi bi-clock-history me-1"></i>@item.EstadoCita
+                                                </span>
+                                            break;
+                                        default:
+                                            <span class="text-muted small italic">@item.EstadoCita</span>
+                                            break;
+                                    }
+                                </td>
                                 <td class="text-center pe-4 align-middle">
-                                    <a asp-action="Detalle" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary rounded-pill px-3">
+                                    <a asp-action="Detalle" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary rounded-pill px-3 shadow-sm">
                                         <i class="bi bi-pencil-square me-1"></i> Gestionar
                                     </a>
                                 </td>

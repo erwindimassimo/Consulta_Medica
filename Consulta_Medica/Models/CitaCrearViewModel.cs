@@ -13,6 +13,7 @@ namespace Consulta_Medica.Models
         public DateTime FechaHora { get; set; } = DateTime.Today;
         [Required(ErrorMessage ="Debe elegir un paciente")]
         public int PacienteId { get; set; }
+        public int MedicoId { get; set; }
         public string NombreCompleto { get; set; } = string.Empty;
         [Required(ErrorMessage = "El motivo de la consulta es obligatorio")]
         public string Motivo { get; set; } = string.Empty;

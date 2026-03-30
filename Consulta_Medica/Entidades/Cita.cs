@@ -7,7 +7,11 @@ namespace Consulta_Medica.Entidades
         [Key]
         public int Id { get; set; }
         [Required(ErrorMessage = "La fecha y hora son obligatorias")]
-        public DateTime FechaHora { get; set; }        
+        public DateTime FechaHora { get; set; }
+        [Required(ErrorMessage = "El/la médico es obligatorio")]
+        public int MedicoId { get; set; }
+        public Medico Medico { get; set; } = null!;
+        [Required(ErrorMessage = "El/la paciente es obligatorio")]
         public int PacienteId { get; set; }
         public Paciente Paciente { get; set; } = null!;        
         [Required(ErrorMessage = "El motivo de la consulta es obligatorio")]
