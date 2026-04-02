@@ -9,15 +9,6 @@
         public string TipoIdentificacionNombre { get; set; } = string.Empty;
         public string? SeguroMedico { get; set; }
         public string? NotasMedicas { get; set; }
-        public List<MedicamentoPrescrito> LineasReceta { get; set; } = new();
-    }
-
-    public class MedicamentoPrescrito
-    {
-        public string NombreMedicamento { get; set; } = string.Empty;
-        public string PresentacionComercial { get; set; } = string.Empty;
-        public string ConcentracionDosis { get; set; } = string.Empty;
-        public string NombreLaboratorio { get; set; } = string.Empty;
-        public string Instrucciones { get; set; } = string.Empty;
+        public List<RecetaDetalleDetalleViewModel> DetallesMedicamentos { get; set; } = new();
     }
 }

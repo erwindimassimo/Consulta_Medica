@@ -1,4 +1,4 @@
-﻿@model Consulta_Medica.Models.RecetaDetalleViewModel
+﻿@model RecetaDetalleViewModel
 
 @{
     ViewData["Title"] = "Detalle de Receta Médica";
@@ -52,16 +52,16 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var item in Model.LineasReceta)
+                        @foreach (var item in Model.DetallesMedicamentos)
                         {
                             <tr>
                                 <td>
-                                    <div class="fw-bold text-dark">@item.NombreMedicamento</div>
+                                    <div class="fw-bold text-dark">@item.Nombre</div>
                                     <span class="badge bg-info text-dark opacity-75">@item.NombreLaboratorio</span>
                                 </td>
                                 <td>
-                                    <div class="text-dark">@item.PresentacionComercial</div>
-                                    <small class="text-muted">@item.ConcentracionDosis</small>
+                                    <div class="text-dark">@item.Presentacion</div>
+                                    <small class="text-muted">@item.Concentracion</small>
                                 </td>
                                 <td class="bg-light bg-opacity-50">
                                     <div class="p-2 border-start border-3 border-primary shadow-sm rounded">
@@ -83,21 +83,39 @@
             }
         </div>
 
-        <div class="card-footer bg-white py-4 text-end border-top-0">
-            <button onclick="window.print();" class="btn btn-primary btn-lg px-5 shadow">
-                <i class="bi bi-printer me-2"></i>Imprimir Receta
-            </button>
+        <div class="card-footer bg-white py-4 border-top-0 d-flex justify-content-between align-items-center">
+            <a asp-action="Index" class="btn btn-outline-secondary px-4 d-none d-md-inline-block">
+                <i class="bi bi-list-ul me-2"></i>Ver todas las recetas
+            </a>
+
+            <div class="d-flex gap-3">
+                <a asp-action="Editar" asp-route-id="@Model.RecetaId" class="btn btn-warning px-4 shadow-sm fw-bold">
+                    <i class="bi bi-pencil-square me-2"></i>Editar Receta
+                </a>
+
+                <button onclick="window.print();" class="btn btn-primary px-5 shadow fw-bold">
+                    <i class="bi bi-printer me-2"></i>Imprimir Receta
+                </button>
+            </div>
         </div>
     </div>
 </div>
 
 <style>
+    /* Aseguramos que el encabezado de la tabla sea azul primary */
     .table-primary {
         background-color: #0d6efd !important;
     }
 
+    /* Estilos para impresión clínica */
     @@media print {
-        .btn, .card-header a, .card-footer {
+        /* Ocultamos botones, navegación y pie de página */
+        .btn,
+        .card-header a,
+        .card-footer,
+        nav,
+        footer,
+        a[href*="Editar"] {
             display: none !important;
         }
 
@@ -112,11 +130,17 @@
             margin: 0 !important;
             padding: 0 !important;
         }
-
+        /* Forzamos colores en la impresión */
         .table-primary {
             background-color: #0d6efd !important;
             color: white !important;
             -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        .badge {
+            border: 1px solid #ddd !important;
+            color: black !important;
         }
     }
 </style>

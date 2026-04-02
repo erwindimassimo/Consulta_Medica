@@ -1,0 +1,175 @@
+﻿@model RecetaEditarViewModel
+
+@{
+    ViewData["Title"] = "Editar Receta";
+}
+
+<div class="container mt-4">
+    <div class="card shadow border-0">
+        <div class="card-header bg-primary text-white py-3">
+            <h4 class="mb-0 fw-bold">
+                <i class="bi bi-pencil-square me-2"></i>Editar Receta Médica #@Model.Id
+            </h4>
+        </div>
+
+        <div class="card-body bg-light">
+            <form asp-action="Editar" id="formReceta">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <input type="hidden" asp-for="Id" />
+
+                <div class="row mb-4">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="PacienteId" class="form-label fw-bold text-primary"></label>
+                        <select asp-for="PacienteId" asp-items="Model.ListaPacientes" class="form-select border-primary">
+                            <option value="">-- Seleccionar Paciente --</option>
+                        </select>
+                        <span asp-validation-for="PacienteId" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="FechaReceta" class="form-label fw-bold text-primary"></label>
+                        <input asp-for="FechaReceta" class="form-control border-primary" />
+                        <span asp-validation-for="FechaReceta" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="card border-primary mb-4 shadow-sm">
+                    <div class="card-header bg-primary text-white fw-bold py-2">
+                        <i class="bi bi-plus-circle me-2"></i>Modificar Medicamentos
+                    </div>
+                    <div class="card-body bg-white">
+                        <div class="row align-items-end g-3">
+                            <div class="col-md-5">
+                                <label class="form-label small fw-bold text-dark">Medicamento</label>
+                                <select id="selMedicamento" asp-items="Model.ListaMedicamentos" class="form-select">
+                                    <option value="">-- Seleccionar para añadir --</option>
+                                </select>
+                            </div>
+                            <div class="col-md-5">
+                                <label class="form-label small fw-bold text-dark">Dosis / Instrucciones</label>
+                                <input type="text" id="txtInstrucciones" class="form-control" placeholder="Ej: 1 cada 8 horas" />
+                            </div>
+                            <div class="col-md-2">
+                                <button type="button" id="btnAgregar" class="btn btn-primary w-100 fw-bold">
+                                    <i class="bi bi-plus-lg"></i> Añadir
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-responsive rounded shadow-sm">
+                    <table class="table table-hover bg-white mb-0" id="tablaDetalles">
+                        <thead class="bg-primary text-white">
+                            <tr>
+                                <th class="py-3 px-4">Medicamento</th>
+                                <th class="py-3">Instrucciones</th>
+                                <th width="80" class="text-center py-3">Eliminar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (int i = 0; i < Model.Detalles.Count; i++)
+                            {
+                                <tr>
+                                    <td class="px-4 align-middle fw-bold">
+                                        @Model.Detalles[i].Nombre
+                                        <input type="hidden" name="Detalles[@i].MedicamentoId" value="@Model.Detalles[i].MedicamentoId" />
+                                    </td>
+                                    <td class="align-middle">
+                                        @Model.Detalles[i].Instrucciones
+                                        <input type="hidden" name="Detalles[@i].Instrucciones" value="@Model.Detalles[i].Instrucciones" />
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        <button type="button" class="btn btn-sm btn-outline-danger border-0" onclick="eliminarFila(this)">
+                                            <i class="bi bi-trash-fill fs-5"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="mt-4 mb-4">
+                    <label asp-for="Observaciones" class="form-label fw-bold text-primary"></label>
+                    <textarea asp-for="Observaciones" class="form-control border-primary" rows="3">@Model.Observaciones</textarea>
+                </div>
+
+                <div class="d-flex justify-content-end gap-2 border-top pt-4">
+                    <a asp-action="Index" class="btn btn-outline-secondary px-4">Cancelar</a>
+                    <button type="submit" class="btn btn-primary px-5 shadow">
+                        <i class="bi bi-check-circle me-1"></i> Guardar Cambios
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        // Importante: El contador debe iniciar con el número de filas que ya existen
+        let contadorFilas = @Model.Detalles.Count;
+
+        document.getElementById("btnAgregar").addEventListener("click", function () {
+            const selMed = document.getElementById("selMedicamento");
+            const txtInst = document.getElementById("txtInstrucciones");
+
+            const medId = selMed.value;
+            const medNombre = selMed.options[selMed.selectedIndex].text;
+            const instrucciones = txtInst.value;
+
+            if (!medId || !instrucciones) {
+                alert("Seleccione un medicamento e ingrese las instrucciones.");
+                return;
+            }
+
+            const tbody = document.querySelector("#tablaDetalles tbody");
+            const tr = document.createElement("tr");
+
+            tr.innerHTML = `
+                <td class="px-4 align-middle fw-bold">
+                    ${medNombre}
+                    <input type="hidden" name="Detalles[${contadorFilas}].MedicamentoId" value="${medId}" />
+                </td>
+                <td class="align-middle">
+                    ${instrucciones}
+                    <input type="hidden" name="Detalles[${contadorFilas}].Instrucciones" value="${instrucciones}" />
+                </td>
+                <td class="text-center align-middle">
+                    <button type="button" class="btn btn-sm btn-outline-danger border-0" onclick="eliminarFila(this)">
+                        <i class="bi bi-trash-fill fs-5"></i>
+                    </button>
+                </td>
+            `;
+
+            tbody.appendChild(tr);
+            contadorFilas++;
+
+            selMed.value = "";
+            txtInst.value = "";
+            selMed.focus();
+        });
+
+        function eliminarFila(boton) {
+            boton.closest("tr").remove();
+            reindexarFilas();
+        }
+
+        function reindexarFilas() {
+            const filas = document.querySelectorAll("#tablaDetalles tbody tr");
+            contadorFilas = 0;
+            filas.forEach((fila) => {
+                fila.querySelectorAll("input").forEach((input) => {
+                    const name = input.getAttribute("name");
+                    const prop = name.split(".")[1];
+                    input.setAttribute("name", `Detalles[${contadorFilas}].${prop}`);
+                });
+                contadorFilas++;
+            });
+        }
+    </script>
+}
