@@ -6,24 +6,22 @@ namespace Consulta_Medica.Entidades
     {
         [Key]
         public int Id { get; set; }
-        [Required]
-        public DateTime Fecha { get; set; } = DateTime.Now;
-        [Required(ErrorMessage = "El motivo de consulta es obligatorio")]
+        [Required(ErrorMessage = "El paciente es obligatorio")]
+        public int PacienteId { get; set; }
+        public Paciente? Paciente { get; set; }
+        public int? CitaId { get; set; }
+        public Cita? Cita { get; set; }
+        [Required(ErrorMessage = "La fecha de la consulta es obligatoria")]
+        [DataType(DataType.Date)]
+        public DateTime Fecha { get; set; }
+        [Required(ErrorMessage = "Indique el motivo de la visita")]
         public string Motivo { get; set; } = string.Empty;
         public string? Sintomas { get; set; }
-        [Required(ErrorMessage = "El diagnóstico es necesario")]
+        [Required(ErrorMessage = "El diagnóstico es fundamental")]
         public string Diagnostico { get; set; } = string.Empty;
-        public string? NotasPrivadas { get; set; } // Notas que no salen en la impresión
-
-        // Datos Físicos (Signos Vitales)
-        public decimal? Peso { get; set; }
-        public string? TensionArterial { get; set; }
-        public decimal? Temperatura { get; set; }
-        // Relaciones
-        [Required]
-        public int PacienteId { get; set; }
-        public Paciente Paciente { get; set; } = null!;
-        // Una consulta puede generar una receta (o varias)
-        public List<Receta> Recetas { get; set; } = new List<Receta>();
+        public string? NotasEvolucion { get; set; }
+        public int? RecetaId { get; set; }
+        public Receta? Receta { get; set; }
+        public bool Activo {  get; set; }
     }
 }

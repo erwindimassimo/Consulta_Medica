@@ -10,5 +10,6 @@
         public required string Motivo { get; set; }
         public int EstadoCitaId { get; set; }
         public required string EstadoCita { get; set; }
+        public int? ConsultaId { get; set; }
     }
 }

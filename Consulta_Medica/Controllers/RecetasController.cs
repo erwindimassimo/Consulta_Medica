@@ -15,20 +15,22 @@ namespace Consulta_Medica.Controllers
         {
             this.context = context;
         }
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var recetas = await context.Recetas
+            var indicaciones = await context.Recetas
                 .Include(p => p.Paciente)
                 .ToListAsync();
 
-            var modelo = recetas.Select(r => new RecetaListaViewModel
+            var modelo = indicaciones.Select(r => new RecetaListaViewModel
             {
-                NombreCompletoPaciente = r.Paciente.Nombres + " " + r.Paciente.PrimerApellido +
-                    (!string.IsNullOrWhiteSpace(r.Paciente.SegundoApellido) ? " " + r.Paciente.SegundoApellido : ""),
                 Id = r.Id,
                 FechaReceta = r.FechaReceta,
-                PacienteId = r.Paciente.Id,
-                PacienteIdentificacion = (!string.IsNullOrWhiteSpace(r.Paciente.Identificacion) ? r.Paciente.Identificacion : "Menor de edad"),
+                PacienteIdentificacion = r.Paciente.TipoIdentificacionId == 1 ? "Menor de edad" : (r.Paciente.Identificacion ?? string.Empty),
+
+                NombreCompletoPaciente = r.Paciente.Nombres + " " + r.Paciente.PrimerApellido +
+                    (!string.IsNullOrWhiteSpace(r.Paciente.SegundoApellido) ? " " + r.Paciente.SegundoApellido : ""),
+
                 Observaciones = r.Observaciones
             });
 

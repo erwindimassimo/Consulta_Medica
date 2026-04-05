@@ -25,6 +25,9 @@ namespace Consulta_Medica.Datos
         public DbSet<TipoIdentificacion> TiposIdentificaciones { get; set; }
         public DbSet<Sexo> Sexos { get; set; }
         public DbSet<Laboratorio> Laboratorios { get; set; }
+        public DbSet<Consulta> Consultas { get; set; }
+        public DbSet<IndicacionLaboratorio> IndicacionesLaboratorios { get; set; }
+        public DbSet<EstudioLaboratorio> EstudiosLaboratorios { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

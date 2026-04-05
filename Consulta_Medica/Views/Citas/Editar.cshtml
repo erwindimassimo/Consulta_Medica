@@ -1,0 +1,134 @@
+﻿@model CitaEditarViewModel
+
+@{
+    ViewData["Title"] = "Editar Cita";
+}
+
+<div class="container mt-4">
+    <div class="card shadow border-0">
+        <div class="card-header bg-primary text-white py-3">
+            <h5 class="mb-0"><i class="bi bi-calendar-plus me-2"></i>Nueva Cita Médica</h5>
+        </div>
+        <div class="card-body p-4">
+            <form asp-action="Crear" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="PacienteId" class="form-label fw-bold">Paciente</label>
+                        <select asp-for="PacienteId" class="form-select select-buscador" asp-items="Model.Opciones.ListaPacientes">
+                            <option value="">-- Seleccione el Paciente --</option>
+                        </select>
+                        <span asp-validation-for="PacienteId" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="MedicoId" class="form-label fw-bold">Médico Especialista</label>
+                        <select asp-for="MedicoId" class="form-select select-buscador" asp-items="Model.Opciones.ListaMedicos">
+                            <option value="">-- Seleccione el Médico --</option>
+                        </select>
+                        <span asp-validation-for="MedicoId" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="FechaHora" class="form-label fw-bold">Fecha y Hora</label>
+                        <input asp-for="FechaHora" id="selectorFechaHora" class="form-control bg-white" type="text"
+                               placeholder="Seleccione fecha y hora..."
+                               readonly
+                               onkeydown="return false;"
+                               style="caret-color: transparent;" />
+                        <span asp-validation-for="FechaHora" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-8 mb-3">
+                        <label asp-for="Motivo" class="form-label fw-bold">Motivo de la Consulta</label>
+                        <input asp-for="Motivo" class="form-control" placeholder="Ej: Chequeo General..." />
+                        <span asp-validation-for="Motivo" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Notas" class="form-label fw-bold">Notas Adicionales</label>
+                    <textarea asp-for="Notas" class="form-control" rows="3" placeholder="Observaciones adicionales..."></textarea>
+                </div>
+
+                <hr />
+
+                <div class="form-group d-flex justify-content-end">
+                    <a asp-action="Index" class="btn btn-outline-secondary me-2">
+                        <i class="bi bi-arrow-left"></i> Cancelar
+                    </a>
+                    <button type="submit" class="btn btn-primary px-4">
+                        <i class="bi bi-check-circle-fill me-1"></i> Agendar Cita
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/es.js"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            function matchCustom(params, data) {
+                if ($.trim(params.term) === '') return data;
+                if (typeof data.text === 'undefined') return null;
+                var searchTerm = params.term.toLowerCase();
+                return data.text.toLowerCase().indexOf(searchTerm) > -1 ? data : null;
+            }
+
+            $('.select-buscador').select2({
+                theme: 'bootstrap-5',
+                width: '100%',
+                placeholder: 'Escriba para buscar...',
+                matcher: matchCustom
+            });
+
+            $(document).on('select2:open', () => {
+                setTimeout(() => { document.querySelector('.select2-search__field').focus(); }, 50);
+            });
+
+            flatpickr("#selectorFechaHora", {
+                "locale": "es",
+                enableTime: true,
+                dateFormat: "Y-m-d H:i",
+                minDate: "today",
+                time_24hr: true,
+                minuteIncrement: 30,
+                allowInput: false,
+                clickOpens: true,
+                disable: [ function(date) { return (date.getDay() === 0); } ],
+                minTime: "08:00",
+                onChange: function(selectedDates, dateStr, instance) {
+                    if (selectedDates.length > 0) {
+                        const date = selectedDates[0];
+                        const maxT = (date.getDay() === 6) ? "11:30" : "17:30";
+                        instance.set("maxTime", maxT);
+                    }
+                }
+            });
+
+            document.getElementById('selectorFechaHora').addEventListener('keypress', function(e) {
+                e.preventDefault();
+                return false;
+            });
+        });
+    </script>
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
